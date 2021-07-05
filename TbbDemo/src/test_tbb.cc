@@ -1,26 +1,34 @@
 #include "gtest/gtest.h"
-#include <eigen3/Eigen/Dense>
-#include "utils/DepthUtils.h"
+#include "TbbGraph.h"
 
 namespace HugoLiuGithub{
 
 class TestTbb :public testing::Test
 {
+public:
+    TbbGraph g_;
+
 protected:
     virtual void SetUp()
     {
         LOGI("SetUp");
+        g_.BuildDataFlowGraph();
+        g_.BuildDependenceGraph();
     }
     virtual void TearDown()
     {
         LOGI("TearDown");
-
     }
 };
 
 TEST_F(TestTbb, testcase1){
     LOGI("TestTbb testcase1");
-    HANG_STOPWATCH();
+    g_.RunDataFlowGraph();
+}
+
+TEST_F(TestTbb, testcase2){
+    LOGI("TestTbb testcase2");
+    g_.RunDependenceGraph();
 }
 
 }

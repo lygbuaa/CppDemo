@@ -1,3 +1,4 @@
+#!/bin/sh
 reset
 PROJECT_NAME=TbbDemo
 BUILD_TYPE=Debug

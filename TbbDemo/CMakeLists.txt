@@ -66,18 +66,17 @@ find_package(TBB REQUIRED)
 # dependencies
 
 # source files
-set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 file(GLOB_RECURSE SRC_FILES 
-    "${SRC_DIR}/test_tbb.cc"
-    "${COMMON_ROOT_DIR}/utils/DepthUtils.cc"
+    ${SRC_DIR}/test_tbb.cc
+    ${COMMON_ROOT_DIR}/utils/DepthUtils.cc
 )
-
 # source files
-
 
 include_directories(
     ${COMMON_ROOT_DIR}
-    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${TBB_ROOT}/include
 )
 
 add_executable(
@@ -90,4 +89,5 @@ target_link_libraries(
     tbb_test
     pthread
     glog
+    ${TBB_IMPORTED_TARGETS}
 )
