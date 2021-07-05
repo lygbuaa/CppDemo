@@ -63,10 +63,16 @@ endif()
 
 tbb_build(TBB_ROOT ${TBB_ROOT} CONFIG_DIR TBB_DIR MAKE_ARGS ${TBB_MAKE_ARGS})
 find_package(TBB REQUIRED)
+# dependencies
 
 # source files
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
-file(GLOB_RECURSE SRC_FILES "${SRC_DIR}/test_tbb.cc")
+file(GLOB_RECURSE SRC_FILES 
+    "${SRC_DIR}/test_tbb.cc"
+    "${COMMON_ROOT_DIR}/utils/DepthUtils.cc"
+)
+
+# source files
 
 
 include_directories(

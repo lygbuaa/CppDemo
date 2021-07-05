@@ -1,21 +1,28 @@
 #include "gtest/gtest.h"
-#include <glog/logging.h>
+#include <eigen3/Eigen/Dense>
+#include "utils/DepthUtils.h"
+
+namespace HugoLiuGithub{
 
 class TestTbb :public testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        LOG(INFO) << "SetUp";
+        LOGI("SetUp");
     }
     virtual void TearDown()
     {
-        LOG(INFO) << "TearDown";
+        LOGI("TearDown");
+
     }
 };
 
 TEST_F(TestTbb, testcase1){
-    LOG(INFO) << "TestTbb testcase1";
+    LOGI("TestTbb testcase1");
+    HANG_STOPWATCH();
+}
+
 }
 
 int main(int argc, char** argv) {
@@ -26,7 +33,7 @@ int main(int argc, char** argv) {
     FLAGS_minloglevel = 0;
     FLAGS_logtostderr = true;
     FLAGS_colorlogtostderr = true;
-    
+
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

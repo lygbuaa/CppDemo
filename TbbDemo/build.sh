@@ -1,3 +1,4 @@
+reset
 PROJECT_NAME=TbbDemo
 BUILD_TYPE=Debug
 BUILD_PLATFORM=x86_64-linux
