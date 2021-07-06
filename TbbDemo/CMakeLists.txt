@@ -10,9 +10,11 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -fPIC")
-else(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -O0 -fPIC")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -fPIC")
+elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -O0 -fPIC")
+else()
+     message(FATAL_ERROR "CMAKE_BUILD_TYPE must set to: Debug or Release")
 endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 
 message(STATUS "TARGET_OS ${TARGET_OS}, TARGET_ARCH ${TARGET_ARCH}")
@@ -69,6 +71,7 @@ find_package(TBB REQUIRED)
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 file(GLOB_RECURSE SRC_FILES 
     ${SRC_DIR}/test_tbb.cc
+    ${SRC_DIR}/TbbParallelizing.cc
     ${COMMON_ROOT_DIR}/utils/DepthUtils.cc
 )
 # source files
