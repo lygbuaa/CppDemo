@@ -51,11 +51,19 @@ protected:
 };
 
 TEST_F(TestTbbParallelizing, testcase1){
-    p_.RunSerial_2(64);
+    p_.RunSerial_1(32);
 }
 
 TEST_F(TestTbbParallelizing, testcase2){
-    p_.RunParallel_2(64);
+    p_.RunParallel_1(32);
+}
+
+TEST_F(TestTbbParallelizing, testcase3){
+    p_.RunSerial_2(32);
+}
+
+TEST_F(TestTbbParallelizing, testcase4){
+    p_.RunParallel_2(32);
 }
 
 }

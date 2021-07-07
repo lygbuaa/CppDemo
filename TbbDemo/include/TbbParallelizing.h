@@ -2,6 +2,7 @@
 #define TBB_PARALLELIZING_H
 
 #include <eigen3/Eigen/Dense>
+#include <atomic>
 #include "tbb/tbb.h"
 #include "utils/DepthUtils.h"
 
@@ -26,6 +27,12 @@ public:
     class ParallelWrapper_1
     {
         public:
+            static std::atomic<size_t> counter_;
+            ParallelWrapper_1(){
+                LOGI("create thread [%ld]", (size_t)counter_);
+                ++ counter_;
+            }
+
             void operator()(const tbb::blocked_range<size_t>& r) const {
                 for(size_t i=r.begin(); i!=r.end(); ++i){
                     compute(256);
@@ -45,11 +52,12 @@ public:
     void RunParallel_1(size_t n){
         #define USE_AFFINITY_PARTITIONER 0
 
+        ParallelWrapper_1 pw;
         #if USE_AFFINITY_PARTITIONER
             static tbb::affinity_partitioner ap;
-            tbb::parallel_for(tbb::blocked_range<size_t>(0, n), ParallelWrapper_1(), ap);
+            tbb::parallel_for(tbb::blocked_range<size_t>(0, n), pw, ap);
         #else
-            tbb::parallel_for(tbb::blocked_range<size_t>(0, n), ParallelWrapper_1());
+            tbb::parallel_for(tbb::blocked_range<size_t>(0, n), pw);
         #endif
     }
 
@@ -59,18 +67,18 @@ public:
     class ParallelWrapper_2
     {
         public:
+            static std::atomic<size_t> counter_;
             double min_ {std::numeric_limits<double>::max()};
             size_t index_ {0};
-            static size_t counter_;
             size_t id_;
 
             ParallelWrapper_2() {
-                LOGI("create father [%ld]", counter_);
+                LOGI("create father [%ld]", (size_t)counter_);
             }
 
             ParallelWrapper_2(ParallelWrapper_2& other, tbb::split) : min_(std::numeric_limits<double>::max()), index_(0) {
                 id_ = ++counter_;
-                LOGI("create derive [%ld]", id_);
+                LOGI("create derived [%ld]", id_);
             }
 
             void join(const ParallelWrapper_2& other){
