@@ -119,6 +119,102 @@ public:
         return pw.min_;
     }
 
+    /*
+    * for input, copy constructor must be defined, tbb::flow_control::stop() must be called
+    */
+    class PpInputFunc
+    {
+        public:
+            static std::atomic<size_t> counter_;
+            size_t id_;
+            size_t total_;
+
+            PpInputFunc(size_t n) : total_(n) {
+                id_ = 0;
+                LOGI("create input [%ld]", (size_t)counter_);
+            }
+            PpInputFunc(const PpInputFunc& other){
+                id_ = ++counter_;
+                this->total_ = other.total_;
+                LOGI("input copied [%ld]", id_);
+            }
+            ~PpInputFunc(){}
+
+            double operator()(tbb::flow_control& fc) const {
+                static int total = 0;
+                if(total < total_){
+                    double val = compute(64);
+                    LOGI("input [%ld] start", total++);
+                    return val;
+                }else{
+                    fc.stop();
+                    LOGI("input [%ld] exit", total);
+                    return 0.0f;
+                }
+            }
+    };
+
+    /*
+    * for mid, only need operator()
+    */
+    class PpMidFunc
+    {
+        public:
+            static std::atomic<size_t> counter_;
+            size_t id_;
+
+            PpMidFunc(){
+                id_ = ++counter_;
+                LOGI("create mid [%ld]", (size_t)counter_);
+            }
+
+            double operator()(double tmp) const {
+                static int total = 0;
+                double val = compute(512);
+                LOGI("mid [%ld] pass", total++);
+                return val;
+            }
+    };
+
+    /*
+    * for output, only need operator()
+    */
+    class PpOutputFunc
+    {
+        public:
+            static std::atomic<size_t> counter_;
+            size_t id_;
+
+            PpOutputFunc(){
+                id_ = ++counter_;
+                LOGI("create output [%ld]", id_);
+            }
+
+            void operator()(double tmp) const {
+                static int total = 0;
+                compute(64);
+                LOGI("output [%ld] done", total++);
+            }
+    };
+
+    void RunSerial_3(size_t n){
+        for(int i = 0; i < n; ++i){
+            compute(64);
+            compute(512);
+            compute(64);
+        }
+    }
+
+    void RunPipeline(size_t n){
+        const int ntoken = 8;
+        tbb::filter_t<void, double> f1(tbb::filter::serial_in_order, PpInputFunc(n));
+        tbb::filter_t<double, double> f2(tbb::filter::parallel, PpMidFunc());
+        tbb::filter_t<double, void> f3(tbb::filter::serial_in_order, PpOutputFunc());
+
+        tbb::filter_t<void, void> f = f1 & f2 & f3;
+        tbb::parallel_pipeline(ntoken, f);
+    }
+
 };
 }
 

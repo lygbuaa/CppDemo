@@ -32,7 +32,6 @@ TEST_F(TestTbbGraph, testcase2){
     LOGI("TestTbbGraph testcase2");
     g_.RunDependenceGraph();
 }
-
 #endif
 
 class TestTbbParallelizing : public testing::Test
@@ -50,20 +49,28 @@ protected:
     }
 };
 
-TEST_F(TestTbbParallelizing, testcase1){
-    p_.RunSerial_1(32);
+// TEST_F(TestTbbParallelizing, testcase1){
+//     p_.RunSerial_1(32);
+// }
+
+// TEST_F(TestTbbParallelizing, testcase2){
+//     p_.RunParallel_1(32);
+// }
+
+// TEST_F(TestTbbParallelizing, testcase3){
+//     p_.RunSerial_2(32);
+// }
+
+// TEST_F(TestTbbParallelizing, testcase4){
+//     p_.RunParallel_2(32);
+// }
+
+TEST_F(TestTbbParallelizing, testcase5){
+    p_.RunSerial_3(8);
 }
 
-TEST_F(TestTbbParallelizing, testcase2){
-    p_.RunParallel_1(32);
-}
-
-TEST_F(TestTbbParallelizing, testcase3){
-    p_.RunSerial_2(32);
-}
-
-TEST_F(TestTbbParallelizing, testcase4){
-    p_.RunParallel_2(32);
+TEST_F(TestTbbParallelizing, testcase6){
+    p_.RunPipeline(8);
 }
 
 }
